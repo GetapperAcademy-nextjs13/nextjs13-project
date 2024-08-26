@@ -1,6 +1,6 @@
 # nextjs13-project
 
-## installazione
+## installazione pacchetti
 
 ```bash
 npm install
