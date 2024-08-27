@@ -1,11 +1,157 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import React, { useEffect, useMemo } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 
-const inter =  Inter({ subsets: ['latin'] })
+const Button = ({ onClick, children }) => {
+  const renderCount = useRef(0);
+  renderCount.current++;
+
+  return (
+    <button onClick={onClick}>
+      {children} - rendering: {renderCount.current}
+    </button>
+  );
+};
+
+const Button2 = ({ onClick, children }) => {
+  const renderCount2 = useRef(0);
+  renderCount2.current++;
+
+  return <button onClick={onClick}>{children}</button>;
+};
+
+const Button3 = memo(
+  ({
+    onClick,
+    children,
+  }: {
+    onClick: () => void;
+    children: React.ReactNode;
+  }) => {
+    const renderCount3 = useRef(0);
+    renderCount3.current++;
+    return (
+      <button onClick={onClick}>
+        {children} - rendering:{renderCount3.current}
+      </button>
+    );
+  },
+);
+
+Button3.displayName = "Button3";
+
+const Button4 = memo(
+  ({ onClick, label }: { onClick: () => void; label: string }) => {
+    const renderCount4 = useRef(0);
+    renderCount4.current++;
+    return (
+      <button onClick={onClick}>
+        {label} - rendering:{renderCount4.current}
+      </button>
+    );
+  },
+);
+
+Button4.displayName = "Button4";
+
+const Button5 = memo(
+  ({ onClick, label }: { onClick: () => void; label: string }) => {
+    return <button onClick={onClick}>{label}</button>;
+  },
+);
+
+Button5.displayName = "Button5";
+
+const Button6 = memo(
+  ({
+    onClick,
+    label,
+    counterObject,
+  }: {
+    onClick: () => void;
+    label: string;
+    counterObject: {
+      counter9: number;
+    };
+  }) => {
+    const renderCount3 = useRef(0);
+    renderCount3.current++;
+    return (
+      <button onClick={onClick}>
+        {label} - {counterObject.counter9} - rendering {renderCount3.current}
+      </button>
+    );
+  },
+);
+Button6.displayName = "Button6";
 
 export default function Home() {
+  const [counter, setCounter] = useState(0);
+  const counter2 = useRef(0); //Il componente non viene reindirizzato
+  const [counter3, setCounter3] = useState(0);
+  const [counter4, setCounter4] = useState(0);
+  const [counter5, setCounter5] = useState(0);
+  const [counter6, setCounter6] = useState(0);
+  const [counter7, setCounter7] = useState(0);
+  const [counter8, setCounter8] = useState(0);
+  const [counter9, setCounter9] = useState(0);
+
+  const handleClick = () => {
+    setCounter3(counter3 + 1);
+  };
+
+  const handleClick2 = useCallback(() => {
+    setCounter5(counter5 + 1);
+  }, [counter5]); //memomizziamo una funzione
+
+  const handleClick3 = useCallback(() => {
+    setCounter6(counter6 + 1);
+  }, [counter6]);
+
+  const handleClick4 = useCallback(() => {
+    setCounter7(counter7 + 1);
+  }, [counter7]);
+
+  const handleClick5 = useCallback(() => {
+    setCounter8((prev) => prev + 1);
+  }, []);
+
+  const handleClick6 = useCallback(() => {
+    setCounter9((prev) => prev + 1);
+  }, []);
+
+  const counterObject = useMemo(() => {
+    return { counter9 };
+  }, [counter9]);
+
+  useEffect(() => {
+    console.log("effect");
+    //console.log("effect" + counter 9);
+  }, []); //[counter9]
+
+  useEffect(() => {
+    window.onresize = () => {
+      console.log("resize");
+    };
+  }, []);
+
+  useEffect(() => {
+    window.onresize = () => {
+      console.log("resize");
+    };
+    return () => {
+      window.onresize = null;
+    };
+  }, []);
+
+  const onResize = useCallback(() => {}, []);
+  useEffect(() => {
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, [onResize]);
+
   return (
     <>
       <Head>
@@ -14,110 +160,75 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
-          </p>
+      <main>
+        <div>
+          <h1>Hello world</h1>
+          <h2>Next.js</h2>
           <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => {
+                setCounter(counter + 1);
+              }}
             >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+              Clicked me {counter}
+            </button>
           </div>
-        </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
+          <div>
+            <button
+              onClick={() => {
+                counter2.current += 1;
+              }}
+            >
+              Clicked me {counter2.current}
+            </button>
+          </div>
+          <div>
+            <Button
+              onClick={handleClick}
+              children={`Clicked me ${counter3} `}
+            />
+            <button onClick={() => setCounter3(counter3 + 1)}>
+              Other button
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                setCounter4(counter4 + 1);
+              }}
+            >
+              {counter4}
+            </button>
+          </div>
+          <div>
+            <Button2
+              onClick={handleClick2}
+              children={`Clicked me ${counter5} `}
             />
           </div>
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
+          <div>
+            <Button3
+              onClick={handleClick3}
+              children={`Clicked me ${counter6} `}
+            />
+          </div>
+          <div>
+            <Button4 onClick={handleClick4} label={`Clicked me ${counter7} `} />
+          </div>
+          <div>
+            <Button5 onClick={handleClick5} label={"Clicked me"} />
+            <span>Clicked {counter8} times</span>
+          </div>
+          <div>
+            <Button6
+              onClick={handleClick6}
+              label={`Clicked me`}
+              counterObject={counterObject}
+            />
+            <span>Clicked {counter9} times</span>
+          </div>
         </div>
       </main>
     </>
-  )
+  );
 }
