@@ -84,6 +84,50 @@ const Button6 = memo(
   },
 );
 Button6.displayName = "Button6";
+const Button7 = memo(
+  ({
+    onClick,
+    label,
+    counterObject,
+  }: {
+    onClick: () => void;
+    label: number;
+    counterObject: {
+      counter9: number;
+    };
+  }) => {
+    const renderCount3 = useRef(0);
+    renderCount3.current++;
+    return (
+      <button onClick={onClick}>
+        {label} - {counterObject.counter9} - rendering {renderCount3.current}
+      </button>
+    );
+  },
+);
+Button7.displayName = "Button7";
+const Button8 = memo(
+  ({
+    onClick,
+    label,
+    counterObject,
+  }: {
+    onClick: () => void;
+    label: number;
+    counterObject: {
+      counter9: number;
+    };
+  }) => {
+    const renderCount3 = useRef(0);
+    renderCount3.current++;
+    return (
+      <button onClick={onClick}>
+        {label} - {counterObject.counter9} - rendering {renderCount3.current}
+      </button>
+    );
+  },
+);
+Button8.displayName = "Button8";
 
 export default function Home() {
   const [counter, setCounter] = useState(0);
@@ -95,6 +139,8 @@ export default function Home() {
   const [counter7, setCounter7] = useState(0);
   const [counter8, setCounter8] = useState(0);
   const [counter9, setCounter9] = useState(0);
+  const [counter10, setCounter10] = useState(0);
+  const [counter11, setCounter11] = useState(0);
 
   const handleClick = () => {
     setCounter3(counter3 + 1);
@@ -119,8 +165,15 @@ export default function Home() {
   const handleClick6 = useCallback(() => {
     setCounter9((prev) => prev + 1);
   }, []);
+  const handleClick7 = useCallback(() => {
+    setCounter10((prev) => prev + 1);
+  }, []);
+  const handleClick8 = useCallback(() => {
+    setCounter11((prev) => prev + 1);
+  }, []);
 
   const counterObject = useMemo(() => {
+    //really complicated algorithm
     return { counter9 };
   }, [counter9]);
 
@@ -151,6 +204,19 @@ export default function Home() {
       window.removeEventListener("resize", onResize);
     };
   }, [onResize]);
+
+  let num = 5;
+  for (let i = 0; i < 100000000; i++) {
+    num += i;
+  }
+
+  const label2 = useMemo(() => {
+    let num2 = 5;
+    for (let i = 0; i < 1000; i++) {
+      num2 += i;
+    }
+    return num2;
+  }, []);
 
   return (
     <>
@@ -226,6 +292,22 @@ export default function Home() {
               counterObject={counterObject}
             />
             <span>Clicked {counter9} times</span>
+          </div>
+          <div>
+            <Button7
+              onClick={handleClick7}
+              label={num}
+              counterObject={counterObject}
+            />
+            <span>Clicked {counter10} times</span>
+          </div>
+          <div>
+            <Button8
+              onClick={handleClick8}
+              label={label2}
+              counterObject={counterObject}
+            />
+            <span>Clicked {counter11} times</span>
           </div>
         </div>
       </main>
