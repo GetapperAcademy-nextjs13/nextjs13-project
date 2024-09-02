@@ -1,3 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 export const useDashboardScene = () => {
-  return {};
+  const navigate = useNavigate();
+  return {
+    navigate,
+  };
 };

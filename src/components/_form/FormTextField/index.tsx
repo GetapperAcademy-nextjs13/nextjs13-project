@@ -13,7 +13,7 @@ export const FormTextField = memo(
     return (
       <TextField
         name={name}
-        variant="outlined" //filled or standard
+        variant="outlined"
         onChange={handleChange}
         value={value}
         error={!!error}

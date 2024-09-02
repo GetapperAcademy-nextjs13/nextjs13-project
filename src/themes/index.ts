@@ -10,14 +10,5 @@ export default responsiveFontSizes(
         main: "#6291A8",
       },
     },
-    components: {
-      MuiButton: {
-        styleOverrides: {
-          root: {
-            borderRadius: 10,
-          },
-        },
-      },
-    },
   }),
 );
